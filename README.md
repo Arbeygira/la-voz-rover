@@ -1,24 +1,39 @@
-# La Voz Rover - Emisora Scout Virtual
+# La Voz Rover - Emisora Scout Virtual v2.0
 
-Una emisora scout virtual moderna con autenticación y reproducción de música en vivo.
+Una emisora scout virtual moderna con **acceso público para oyentes** y panel profesional para DJ/Admin.
 
-## 🚀 Características
+## 🚀 Características (v2.0)
 
-- ✅ Autenticación segura con Supabase
+### Para Oyentes (Acceso Público)
+- ✅ **Sin login requerido** - Escucha directamente
 - 🎵 Reproductor de música en vivo
-- 🎙️ Control de sesiones de streaming
-- 👥 Sistema de oyentes en tiempo real
-- 📱 Interfaz responsive y moderna
-- 🎨 Diseño atractivo con Tailwind CSS
+- 👥 Contador de oyentes en tiempo real
+- 📱 Interfaz responsive y hermosa
+- 🎨 Diseño moderno con tema rojo
 
-## 🛠️ Instalación
+### Para DJ/Admin (Autenticación Requerida)
+- ✅ Dashboard profesional
+- 🎙️ Control de streaming en vivo
+- 📊 Estadísticas en tiempo real
+- 🎚️ Gestión de playlist avanzada
+- ⚙️ Panel de configuración
+- 🔴 Tema rojo moderno con glassmorphism
 
-### Requisitos Previos
-- Node.js 16+
-- npm o yarn
-- Cuenta en Supabase
+## 🛠️ Instalación Rápida
 
-### Pasos
+### Opción 1: Con el Script (Recomendado)
+
+**Windows:**
+```bash
+INICIO.bat
+```
+
+**Mac/Linux:**
+```bash
+./inicio.sh
+```
+
+### Opción 2: Manual
 
 1. **Clonar el repositorio**
 ```bash
@@ -32,105 +47,55 @@ npm install
 ```
 
 3. **Configurar variables de entorno**
-Crea un archivo `.env.local` en la raíz del proyecto:
-
+Crea `.env.local`:
 ```env
 VITE_SUPABASE_URL=https://dprgnjejzfrdimitbtii.supabase.co
 VITE_SUPABASE_ANON_KEY=fC9vkVlTA3tpiPFExq97PA_JStbslbr
 ```
 
-4. **Configurar Supabase**
-
-Ejecuta las siguientes queries en Supabase SQL Editor:
-
-```sql
--- Crear tabla de usuarios
-CREATE TABLE users (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email VARCHAR(255) NOT NULL,
-  display_name VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Crear tabla de canciones
-CREATE TABLE songs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title VARCHAR(255) NOT NULL,
-  artist VARCHAR(255) NOT NULL,
-  url TEXT NOT NULL,
-  duration INTEGER NOT NULL,
-  cover_url TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Crear tabla de sesiones de streaming
-CREATE TABLE stream_sessions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  is_live BOOLEAN DEFAULT true,
-  current_song_id UUID REFERENCES songs(id),
-  listeners INTEGER DEFAULT 0,
-  started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  ended_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Crear índices
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_stream_sessions_user_id ON stream_sessions(user_id);
-CREATE INDEX idx_stream_sessions_is_live ON stream_sessions(is_live);
-```
-
-5. **Configurar autenticación en Supabase**
-
-- Ve a Authentication > Providers
-- Habilita Email/Password
-- Configura los URLs de redirección:
-  - `http://localhost:5173` (desarrollo)
-  - Tu dominio de producción
-
-6. **Iniciar el servidor de desarrollo**
+4. **Iniciar**
 ```bash
 npm run dev
 ```
 
-Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
+Abre http://localhost:5173
 
-## 📁 Estructura del Proyecto
+## 📖 Guía de Uso
+
+### 🎧 Para Oyentes (Público)
 
 ```
-src/
-├── components/        # Componentes reutilizables
-├── pages/            # Páginas principales
-│   ├── LoginPage.tsx # Página de autenticación
-│   └── Player.tsx    # Página del reproductor
-├── hooks/            # Custom hooks
-│   └── useAuth.ts    # Hook de autenticación
-├── lib/              # Librerías y utilidades
-│   └── supabase.ts   # Configuración de Supabase
-├── App.tsx           # Componente principal
-├── App.css           # Estilos globales
-└── main.tsx          # Punto de entrada
+1. Abre http://localhost:5173
+2. ¡Sin login requerido!
+3. Ajusta volumen y disfruta
+4. Ve el contador de oyentes
+5. (Opcional) Click en "DJ LOGIN" para entrar al panel
 ```
 
-## 🎯 Uso
+**Características disponibles:**
+- Reproductor de música
+- Control de volumen
+- Lista de próximas canciones
+- Contador de oyentes en vivo
+- Acceso a login de DJ
 
-### Registrarse
-1. Click en "¿No tienes cuenta? Regístrate"
-2. Ingresa tu email y contraseña
-3. ¡Listo! Ya estás registrado
+### 🎙️ Para DJ/Admin (Autenticación)
 
-### Iniciar Sesión
-1. Ingresa tu email y contraseña
-2. Click en "Iniciar Sesión"
+```
+1. Click en "DJ LOGIN"
+2. Ingresa email y contraseña
+3. Acceso a panel profesional
+4. Gestiona playlist
+5. Monitorea oyentes
+6. Configura streaming
+```
 
-### Reproducir Música
-1. Click en el botón Play (triángulo grande)
-2. Ajusta el volumen con el slider
-3. Navega por la playlist haciendo click en las canciones
+**Panel DJ incluye:**
+- Reproductor avanzado
+- Gestión de canciones
+- Estadísticas en vivo
+- Configuración de broadcast
+- Logout seguro
 
 ## 🔧 Configuración Avanzada
 
