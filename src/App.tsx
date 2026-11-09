@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
-import { LoginPage } from './pages/LoginPage';
-import { Player } from './pages/Player';
+import { DJLogin } from './pages/DJLogin';
+import { Listener } from './pages/Listener';
+import { DJDashboard } from './pages/DJDashboard';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showDJLogin, setShowDJLogin] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -34,23 +36,43 @@ function App() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    setShowDJLogin(false);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-white text-2xl">Cargando...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+          <p className="text-white text-xl mt-4">Cargando...</p>
+        </div>
       </div>
     );
   }
 
-  return user ? (
-    <Player
-      onLogout={handleLogout}
-      userName={user.email?.split('@')[0] || 'Scout'}
-    />
-  ) : (
-    <LoginPage />
+  // Si hay usuario logeado (DJ/Admin)
+  if (user) {
+    return (
+      <DJDashboard
+        onLogout={handleLogout}
+        userName={user.email?.split('@')[0] || 'DJ'}
+      />
+    );
+  }
+
+  // Si está seleccionada la opción de login DJ
+  if (showDJLogin) {
+    return (
+      <DJLogin
+        onSuccess={() => setShowDJLogin(false)}
+        onBack={() => setShowDJLogin(false)}
+      />
+    );
+  }
+
+  // Interfaz por defecto para oyentes
+  return (
+    <Listener onShowDJLogin={() => setShowDJLogin(true)} />
   );
 }
 
